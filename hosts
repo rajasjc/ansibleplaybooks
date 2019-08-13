@@ -1,0 +1,14 @@
+[control]
+chefserver ansible_connection=local
+
+[prod]
+chefclient01 ansible_port=2222
+chefclient0[1:4] ansible_become=true ansible_become_pass=password
+
+[dev]
+chefclient0[5:8] ansible_become=true ansible_become_pass=password ansible_method=sudo
+
+[linux:children]
+prod
+dev
+control

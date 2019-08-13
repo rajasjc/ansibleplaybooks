@@ -1,0 +1,10 @@
+---
+- name : This is sample playbook
+  hosts : all
+  tasks:
+    - name: This is sample playbook
+      copy:
+       src: /tmp/sample
+       dest: /tmp/sample
+       mode: 0644
+...

@@ -1,0 +1,10 @@
+---
+  - name : "Check Host information" 
+    hosts : chefserver
+    gather_facts : true 
+
+    tasks: 
+      - name : Test Hostvars with an ansible fact
+        debug: 
+          msg : "{{ hostvars[ansible_hostname].ansible_port |default('22') }}"
+...

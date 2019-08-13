@@ -1,0 +1,8 @@
+---
+users:
+  - name : ashwin
+    comment : Ashwin Karthick
+    groups : wheel
+  - name : clement 
+    comment : Clement Xavier 
+    groups : wheel 

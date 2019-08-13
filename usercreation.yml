@@ -1,0 +1,25 @@
+---
+- name: TO test Nested loop
+  hosts: chefserver
+  vars:
+   id: [ 'user1', 'user2', 'user3', 'user4', 'user5']
+   G_id: [ 'group1', 'group2', 'group3', 'group4', 'group5' ]
+
+  tasks:
+  - name: To Create Group First 
+    group: 
+     name : "{{ item[1] }}" 
+     state: present 
+    with_nested:
+      - "{{ G_gid }}"
+
+  - name: To create user and add in the group list
+    user:
+      name: "{{ item[0] }}"
+      groups: "{{ item[1] }}"
+      state: present
+      append: yes
+    with_nested:
+      - "{{ id }}" #- [ 'uer1', 'uer2', 'uer3', 'uer4', 'uer5' ]
+      - "{{ G_id }}" #- [ 'group1', 'group2', 'group3', 'group4', 'group5' ]
+...

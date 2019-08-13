@@ -1,0 +1,7 @@
+---
+- name : Create User and groups in Linux Hosts 
+  hosts : chefserver 
+  
+  vars : 
+       
+...

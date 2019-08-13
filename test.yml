@@ -1,0 +1,25 @@
+---
+control:
+  hosts:
+    chefserver:
+      ansible_connection=local
+
+prod:
+  hosts:
+    chefclient01:
+    chefclient02:
+    chefclient03:
+  vars:
+    ansible_user=root
+dev:
+  hosts:
+    chefclient04:
+    chefclient05:
+  vars:
+    ansible_become=true
+    ansible_become_pass=password
+linux:
+  children:
+    prod:
+    dev:
+...

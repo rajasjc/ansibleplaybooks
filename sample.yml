@@ -1,0 +1,95 @@
+---
+- hosts: '{{ affected_host }}'
+roles:
+- /home/sri/playbook/unix_process_cpu_spike
+
+Kindly note that roles "unix_process_cpu_spike" is created under "/home/sri/playbook/" directory
+
+Vars Code:
+$ cat ../unix_process_cpu_spike/vars/main.yml
+---
+# vars file for unix_process_cpu_spike
+incident_data: '{{ description }}'
+cpu_threshold: '{{ cpu_threshold }}'
+
+Tasks Code:
+$ cat ../unix_process_cpu_spike/tasks/main.yml
+---
+# tasks file for unix_process_cpu_spike
+
+# initialize tower workflow variables
+- set_stats:
+   data:
+    ticket_automation: "GEN_GEN_GEN_D_W_Process_CPU_Spike_Handler.yml"
+    ticket_automation_type: "I"
+    ticket_status: "transfer"
+    ticket_closure_code: "Diagnosis"
+    ticket_rc: 6000
+    ticket_message: "Execution Failed."
+   aggregate: no
+
+- debug: var=proc_name
+- set_fact:
+proc_name: "{{ incident_data | regex_replace('Process using high cpu (\\d+)% (\\w+)$', '\\2') }}"
+- debug: var=proc_name
+
+- name: Check CPU Usage of alerting process for HP or AIX Systems
+shell: ps -auxf | grep -v grep | grep {{ proc_name }} | head -1 | awk '{print $3}'
+when: ( ansible_os_family == "HP-UX" or ansible_os_family == "AIX-UX" )
+ignore_errors: True
+register: proc_cpu_output
+
+- name: Check CPU Usage of alerting process for Solaris Systems
+shell: top -b -a -d 1 | grep -v grep | grep {{ proc_name }} | head -1 | awk '{print $9}'
+when: ansible_os_family == "Solaris"
+ignore_errors: True
+register: proc_cpu_output
+
+- name: Check CPU Usage of alerting process for Linux Systems
+shell: /usr/bin/top -b -n 1 | grep -v grep | grep {{ proc_name }} | head -1 | awk '{print $9}'
+when: ansible_os_family == "RedHat"
+ignore_errors: True
+register: proc_cpu_output
+# - debug:
+# msg: "{{ proc_cpu_output }}" 
+# msg: "{{ incident_data }}" 
+
+- block:
+- set_stats:
+data:
+ticket_status: "transfer"
+ticket_closure_code: "Diagnosis"
+ticket_rc: 6001
+ticket_message: "Unable to get CPU Process for {{ proc_name }}. Diagnosis. Transfer Ticket."
+aggregate: no
+- debug:
+msg: "Unable to get CPU Proces for {{ proc_name }}. Diagnosis. Transfer Ticket."
+when: proc_cpu_output.failed
+
+- block:
+#CPU utilization of Process is greater than or equal to the threshold, so transfer ticket
+# set workflow variables
+- set_stats:
+data:
+ticket_status: "transfer"
+ticket_closure_code: "Diagnosis"
+ticket_rc: 6002
+ticket_message: "Process {{ proc_name }} has CPU utilization of {{ proc_cpu_output.stdout }}%, which is greater than or equal to the CPU_threshold of {{ cpu_threshold }}%"
+aggregate: no
+- debug:
+msg: "Process {{ proc_name }} has CPU utilization of {{ proc_cpu_output.stdout }}%, which is greater than or equal to the CPU_threshold of {{ cpu_threshold }}%"
+when: (proc_cpu_output.stdout | int >= cpu_threshold | int and not proc_cpu_output.failed )
+
+- block:
+# CPU utilization of Process is less than the threshold, so resolve ticket
+# set workflow variables
+- set_stats:
+data:
+ticket_status: "resolve"
+ticket_closure_code: "Remediation with Validation Closure"
+ticket_rc: 0
+ticket_message: "Process {{ proc_name }} has CPU utilization of {{ proc_cpu_output.stdout }}%, which is less than the CPU_threshold of {{ cpu_threshold }}%"
+aggregate: no
+- debug:
+msg: "Process {{ proc_name }} has CPU utilization of {{ proc_cpu_output.stdout }}%, which is less than the CPU_threshold of {{ cpu_threshold }}%"
+when: (proc_cpu_output.stdout | int < cpu_threshold | int and not proc_cpu_output.failed )

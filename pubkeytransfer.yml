@@ -1,0 +1,24 @@
+---
+  - name : Public key is deployed to managed hosts for Ansible 
+    hosts : all  
+    remote_user: ansible
+    become: yes
+    become_method: sudo
+    gather_facts: false
+
+    tasks : 
+     - name: 
+       user: 
+        name : devops
+        comment : DevOps User
+        state: present 
+        
+     - name: Set authorized key taken from file
+       authorized_key:
+        user: root
+        state: present
+        key: ' {{ item }}'
+       with_file:
+         - ~/.ssh/id_rsa.pub
+
+...

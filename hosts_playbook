@@ -1,0 +1,14 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.56.10 chefserver
+192.168.56.11 chefclient01
+192.168.56.12 chefclient02
+192.168.56.13 chefclient03
+192.168.56.14 chefclient04
+192.168.56.15 chefclient05
+192.168.56.16 chefclient06
+192.168.56.17 chefclient07
+192.168.56.18 chefclient08
+192.168.56.19 chefclient09
+192.168.56.20 chefclient10
+192.168.56.21 chefclient11

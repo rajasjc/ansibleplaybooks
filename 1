@@ -1,0 +1,12 @@
+---
+  - name : Public key is deployed to managed hosts for Ansible 
+    hosts : all 
+  
+  - tasks : 
+    authorized_key : 
+        user : devops 
+        state : present 
+        key : ' {{ present }}' 
+    with_file:
+        - ~/.ssh/id_rsa.pub
+...

@@ -1,0 +1,20 @@
+{
+"control": {
+"hosts": {
+"chefserver": "ansible_connection=local"
+}
+},
+"prod": {
+"hosts": {
+"chefclient01": null,
+"chefclient02": null,
+"chefclient03": null
+}
+},
+"dev": {
+"hosts": {
+"chefclient04": null,
+"chefclient05": null
+}
+}
+}

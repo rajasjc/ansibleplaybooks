@@ -1,0 +1,12 @@
+---
+ - name : Get user from input
+   hosts : chefserver 
+
+   vars_prompt:
+     - name : username
+       private : False 
+   tasks:
+   - name : Print Message 
+     debug: 
+       msg : "{{ username }}"
+...

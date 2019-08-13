@@ -1,0 +1,28 @@
+---
+  - name : Install httpd
+    hosts : chefclient03, chefclient04 
+    
+    tasks:
+     - name : httpd package
+       yum : 
+        name : httpd
+        state : latest
+     - name : get conf file from central location 
+       get_url:
+         url:  http://192.168.56.10/httpd.conf
+         dest : /etc/httpd/conf/httpd.conf
+     - name : make content
+       copy: 
+         content: 'This is from nodex\n'
+         dest :  /var/www/html/index.html
+         force : no 
+     - name : use linein module to replace 
+       lineinfile: 
+         path : /var/www/html/index.html
+         regexp : 'This is from nodex'
+         line : 'This is from {{ ansible_hostname}}'
+     - name : start the service 
+       service: 
+         name : httpd
+         state : started 
+         enabled : yes

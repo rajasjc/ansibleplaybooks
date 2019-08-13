@@ -1,0 +1,19 @@
+---
+- name : Create Users
+  hosts : chefserver 
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+  gather_facts: false
+
+  vars_files: 
+    - /home/ansible/users.yml 
+  tasks:
+    - name: Create Users using User module 
+      user: 
+       name: "{{ item.name }}"
+       state: present 
+       comment: "{{ item.comment }}"
+       groups: "{{ item.groups }}" 
+      with_items: "{{ users }}"
+...

@@ -1,0 +1,21 @@
+---
+#YAML File starts with three dashes 
+- name : Testing the dictionary Value 
+  hosts: chefserver 
+  gather_facts : false 
+  
+  vars: 
+    inline_named_list:
+     [ item1,item2,item3,item4] 
+  tasks: 
+    - name : Task Dictionary Key value 
+      debug : 
+       msg : "{{ inline_named_list }}"
+    - name : Test named Dictionary key value with dictionary dot notation 
+      debug:
+       msg: " {{ inline_named_list.0 }}"
+    - name : Test named dictionary 
+      debug: 
+       msg: "{{ inline_named_list[0] }}"
+#YAML File ends with three dots
+...

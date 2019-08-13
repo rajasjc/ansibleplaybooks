@@ -1,0 +1,26 @@
+---
+- name : Configure MOTD 
+  hosts : all 
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+  gather_facts: false
+
+  vars:
+     motd: "Welcome to CentOS Linux - Updated by Ansbile \n"
+
+
+  tasks: 
+    - name: Configure in Linux Client 
+      copy: 
+       content: "{{ motd }}"
+       dest: /etc/motd
+      notify: MOTD changed
+
+  handlers:
+    - name: MOTD changed
+      debug:
+       msg: The MOTD was changed
+
+
+...

@@ -1,0 +1,14 @@
+---
+- name : Set_fact Playbooks 
+  hosts : all 
+
+  tasks:
+  - name : set facts standards 
+    set_fact:
+      our_fact: Ansible Rocks!
+
+  - name: Show custom fact
+    debug:
+     msg: "{{ our_fact }}"
+
+...

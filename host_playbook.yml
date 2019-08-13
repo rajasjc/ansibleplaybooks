@@ -1,0 +1,15 @@
+---
+-
+  hosts: all
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+  gather_facts: false
+  
+  tasks:
+    - name : Copying hosts file into all client
+      copy:
+       src: hosts_playbook
+       dest : /etc/hosts
+       mode : 0644
+...
