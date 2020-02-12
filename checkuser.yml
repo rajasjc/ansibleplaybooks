@@ -1,7 +1,6 @@
 ---
 - name : Check User exist or not 
   hosts : chefserver
-
   tasks : 
     - name : execute user exist module
       getent :  
